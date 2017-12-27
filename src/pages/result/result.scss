@@ -1,0 +1,5 @@
+page-result {
+  .content-format {
+    color: lighten(map-get($colors, 'dark'), 20%);
+  }
+}

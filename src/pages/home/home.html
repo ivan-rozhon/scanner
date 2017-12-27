@@ -1,14 +1,22 @@
-<!-- <ion-header>
+<ion-header>
+
   <ion-navbar>
     <ion-title>
-      Scanner
+      QR Scanner
     </ion-title>
-  </ion-navbar>
-</ion-header> -->
 
-<ion-content padding (click)="scan()">
-  <div text-center padding>Tap to scan...</div>
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content (click)="scan()">
   <div text-center>
     <ion-icon name="qr-scanner"></ion-icon>
   </div>
+  <div text-center text-uppercase padding>Tap to scan</div>
 </ion-content>
