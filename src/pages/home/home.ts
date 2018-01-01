@@ -21,9 +21,12 @@ export class HomePage{
     this.barcodeScanner
       .scan({
         resultDisplayDuration: 0,
-        prompt: 'Scan QR Code'
+        prompt: ''
       })
       .then((barcodeData) => {
+        // do nothing if scanning is canceled
+        if (barcodeData.cancelled) { return; }
+
         // Success! Barcode data is here... show result modal
         let resultModal = this.modalCtrl.create(ResultPage, {
           text: barcodeData.text,
