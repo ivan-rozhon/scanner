@@ -1,17 +1,38 @@
 <ion-header>
 
-  <ion-navbar>
+  <!-- <ion-navbar>
     <ion-title>Result</ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
-        <ion-icon name="md-close"></ion-icon>
+        <ion-icon name="undo"></ion-icon>
       </button>
     </ion-buttons>
+  </ion-navbar> -->
+
+  <ion-navbar>
+    <div padding class="content-format">{{ format | translate }}</div>
   </ion-navbar>
 
 </ion-header>
 
-<ion-content padding>
-  <div padding class="content-format">{{ format | translate }}</div>
+<ion-content>
+  <!-- <div padding class="content-format">{{ format | translate }}</div> -->
   <div padding>{{ text }}</div>
+
+  <div class="buttons">
+    <button ion-button full icon-start>
+      <ion-icon name="link"></ion-icon>
+      Open URL
+    </button>
+
+    <button ion-button full icon-start>
+      <ion-icon name="copy"></ion-icon>
+      Copy
+    </button>
+
+    <button ion-button full icon-start color="dark" (click)="dismiss()">
+      <ion-icon name="close"></ion-icon>
+      Close
+    </button>
+  </div>
 </ion-content>

@@ -1,4 +1,8 @@
 page-home {
+  .app-title > div {
+    color: lighten(map-get($colors, 'dark'), 20%);
+  }
+
   ion-content {
     ion-icon {
       font-size: 5em;

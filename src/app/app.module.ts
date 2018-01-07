@@ -10,12 +10,14 @@ import { HomePage } from '../pages/home/home';
 import { ResultPage } from './../pages/result/result';
 
 import { PipesModule } from '../pipes/pipes.module';
+import { SettingsPage } from '../pages/settings/settings';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ResultPage
+    ResultPage,
+    SettingsPage
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,8 @@ import { PipesModule } from '../pipes/pipes.module';
   entryComponents: [
     MyApp,
     HomePage,
-    ResultPage
+    ResultPage,
+    SettingsPage
   ],
   providers: [
     StatusBar,

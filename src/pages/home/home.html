@@ -1,13 +1,13 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>
-      Scanner
+    <ion-title class="app-title">
+      QR/BC Scanner
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only>
-        <ion-icon name="more"></ion-icon>
+      <button ion-button icon-only (click)="openSettings()">
+        <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController } from 'ionic-angular';
+import { AlertController, ModalController, PopoverController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { ResultPage } from '../result/result';
+import { SettingsPage } from '../settings/settings';
 
 @Component({
   selector: 'page-home',
@@ -13,6 +14,7 @@ export class HomePage{
   constructor(
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
+    public popoverCtrl: PopoverController,
     public barcodeScanner: BarcodeScanner
   ) { }
 
@@ -20,8 +22,11 @@ export class HomePage{
   scan(): void {
     this.barcodeScanner
       .scan({
-        resultDisplayDuration: 0,
-        prompt: ''
+        // settings
+        // showFlipCameraButton: true,
+        // showTorchButton: true,
+        prompt: '',
+        resultDisplayDuration: 0
       })
       .then((barcodeData) => {
         // do nothing if scanning is canceled
@@ -41,5 +46,14 @@ export class HomePage{
           buttons: ['OK']
         }).present();
       });
+  }
+
+  /** open setting popover */
+  openSettings(): void {
+    // instance of popover
+    const popover = this.popoverCtrl.create(SettingsPage);
+
+    // present popover
+    popover.present();
   }
 }

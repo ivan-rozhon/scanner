@@ -18,8 +18,13 @@ export class ResultPage {
     this.format = this.params.get('format');
   }
 
+  /** open URL link in browser */
+  openLink(): void {
+    // window.open('https://github.com/ionic-team/ionic-preview-app/tree/master/src/pages/popovers/basic', '_system');
+  }
+
   /** dismiss (close) modal window */
-  dismiss() {
+  dismiss(): void {
     this.viewCtrl.dismiss();
   }
 }

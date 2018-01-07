@@ -2,4 +2,14 @@ page-result {
   .content-format {
     color: lighten(map-get($colors, 'dark'), 20%);
   }
+
+  .buttons {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+
+    & > button {
+      margin: .75em 0;
+    }
+  }
 }
