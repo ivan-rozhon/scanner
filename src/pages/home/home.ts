@@ -33,10 +33,11 @@ export class HomePage{
         if (barcodeData.cancelled) { return; }
 
         // Success! Barcode data is here... show result modal
-        let resultModal = this.modalCtrl.create(ResultPage, {
+        const resultModal = this.modalCtrl.create(ResultPage, {
           text: barcodeData.text,
           format: barcodeData.format
         });
+
         resultModal.present();
       }, (err) => {
         // An error occurred - show alert

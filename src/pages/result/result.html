@@ -1,14 +1,5 @@
 <ion-header>
 
-  <!-- <ion-navbar>
-    <ion-title>Result</ion-title>
-    <ion-buttons start>
-      <button ion-button (click)="dismiss()">
-        <ion-icon name="undo"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar> -->
-
   <ion-navbar>
     <div padding class="content-format">{{ format | translate }}</div>
   </ion-navbar>
@@ -16,8 +7,7 @@
 </ion-header>
 
 <ion-content>
-  <!-- <div padding class="content-format">{{ format | translate }}</div> -->
-  <div padding>{{ text }}</div>
+  <div padding class="result">{{ text }}</div>
 
   <div class="buttons">
     <button ion-button full icon-start>
@@ -30,7 +20,7 @@
       Copy
     </button>
 
-    <button ion-button full icon-start color="dark" (click)="dismiss()">
+    <button ion-button full icon-start color="light" (click)="dismiss()">
       <ion-icon name="close"></ion-icon>
       Close
     </button>

@@ -1,14 +1,18 @@
+$dark-color: lighten(map-get($colors, 'dark'), 10%);
+
 page-home {
   .app-title > div {
-    color: lighten(map-get($colors, 'dark'), 20%);
+    color: $dark-color;
   }
 
   ion-content {
     ion-icon {
+      color: $dark-color;
       font-size: 5em;
     }
 
     .scroll-content {
+      color: $dark-color;
       display: flex;
       flex-flow: column wrap;
       justify-content: center;

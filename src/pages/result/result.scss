@@ -1,6 +1,8 @@
+$dark-color: lighten(map-get($colors, 'dark'), 10%);
+
 page-result {
   .content-format {
-    color: lighten(map-get($colors, 'dark'), 20%);
+    color: $dark-color;
   }
 
   .buttons {
@@ -11,5 +13,9 @@ page-result {
     & > button {
       margin: .75em 0;
     }
+  }
+
+  .result {
+    font-size: 20px;
   }
 }
