@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ViewController, NavParams } from 'ionic-angular';
 
+import { StorageProvider } from '../../providers/storage/storage';
+
 @Component({
   selector: 'page-result',
   templateUrl: 'result.html',
@@ -11,7 +13,8 @@ export class ResultPage {
 
   constructor(
     public viewCtrl: ViewController,
-    public params: NavParams
+    public params: NavParams,
+    public storageProvider: StorageProvider
   ) {
     // assign params
     this.text = this.params.get('text');

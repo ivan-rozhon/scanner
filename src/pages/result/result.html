@@ -1,12 +1,17 @@
 <ion-header>
 
   <ion-navbar>
-    <div padding class="content-format">{{ format | translate }}</div>
+    <ion-title class="app-title">
+        QR/BC Scanner | Result
+    </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
+  <!-- TODO... resolve visibility bug -->
+  <div [class.hidden]="!storageProvider.storageValues.showResultType" padding class="content-format">{{ format | translate }}</div>
+
   <div padding class="result">{{ text }}</div>
 
   <div class="buttons">

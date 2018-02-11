@@ -13,6 +13,7 @@ import { ResultPage } from './../pages/result/result';
 
 import { PipesModule } from '../pipes/pipes.module';
 import { SettingsPage } from '../pages/settings/settings';
+import { StorageProvider } from '../providers/storage/storage';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SettingsPage } from '../pages/settings/settings';
     StatusBar,
     SplashScreen,
     BarcodeScanner,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    StorageProvider
   ]
 })
 export class AppModule { }

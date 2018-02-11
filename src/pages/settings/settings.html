@@ -8,21 +8,21 @@
     </ion-list-header>
 
     <ion-item>
-      <ion-toggle checked="false"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.showFlipCameraButton" (ionChange)="updateValue('showFlipCameraButton', $event)"></ion-toggle>
       <ion-label>
         Enable flip camera
       </ion-label>
     </ion-item>
 
     <ion-item>
-      <ion-toggle checked="false"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.showTorchButton" (ionChange)="updateValue('showTorchButton', $event)"></ion-toggle>
       <ion-label>
         Show torch button
       </ion-label>
     </ion-item>
 
     <ion-item>
-      <ion-toggle checked="false"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.showResultType" (ionChange)="updateValue('showResultType', $event)"></ion-toggle>
       <ion-label>
         Show result type
       </ion-label>

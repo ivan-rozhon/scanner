@@ -4,6 +4,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { ResultPage } from '../result/result';
 import { SettingsPage } from '../settings/settings';
+import { StorageProvider } from './../../providers/storage/storage';
 
 @Component({
   selector: 'page-home',
@@ -15,16 +16,17 @@ export class HomePage{
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    public barcodeScanner: BarcodeScanner
-  ) { }
+    public barcodeScanner: BarcodeScanner,
+    public storageProvider: StorageProvider
+  ) {}
 
   /** activate camera to scan barcode and handle result */
   scan(): void {
     this.barcodeScanner
       .scan({
         // settings
-        // showFlipCameraButton: true,
-        // showTorchButton: true,
+        showFlipCameraButton: this.storageProvider.storageValues.showFlipCameraButton,
+        showTorchButton: this.storageProvider.storageValues.showTorchButton,
         prompt: '',
         resultDisplayDuration: 0
       })
