@@ -2,25 +2,24 @@
 
   <ion-navbar>
     <ion-title class="app-title">
-        QR/BC Scanner | Result
+      Result <span class="shadow-title">| QR/BC Scanner</span>
     </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
-  <!-- TODO... resolve visibility bug -->
-  <div [class.hidden]="!storageProvider.storageValues.showResultType" padding class="content-format">{{ format | translate }}</div>
+  <div padding class="content-format">{{ format | translate }}</div>
 
   <div padding class="result">{{ text }}</div>
 
   <div class="buttons">
-    <button ion-button full icon-start>
+    <button *ngIf="isValidWebUri(text)" ion-button full icon-start (click)="openLink(text)">
       <ion-icon name="link"></ion-icon>
       Open URL
     </button>
 
-    <button ion-button full icon-start>
+    <button ion-button full icon-start (click)="copy(text)">
       <ion-icon name="copy"></ion-icon>
       Copy
     </button>

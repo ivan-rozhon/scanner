@@ -19,8 +19,8 @@ export class SettingsPage {
    * @param key key of value to update
    * @param value updated value
    */
-  updateValue(key: string, event: any): void {
-    this.storageProvider.setValue(key, event.checked);
+  updateValue(key: string, value: any): void {
+    this.storageProvider.setValue(key, value);
   }
 
   // close popup

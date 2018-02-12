@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams } from 'ionic-angular';
+import { Clipboard } from '@ionic-native/clipboard';
+import { ViewController, NavParams, ToastController } from 'ionic-angular';
+
+import { isWebUri } from 'valid-url';
 
 import { StorageProvider } from '../../providers/storage/storage';
 
@@ -14,16 +17,48 @@ export class ResultPage {
   constructor(
     public viewCtrl: ViewController,
     public params: NavParams,
-    public storageProvider: StorageProvider
+    public storageProvider: StorageProvider,
+    public toastCtrl: ToastController,
+    private clipboard: Clipboard
   ) {
     // assign params
     this.text = this.params.get('text');
     this.format = this.params.get('format');
   }
 
-  /** open URL link in browser */
-  openLink(): void {
-    // window.open('https://github.com/ionic-team/ionic-preview-app/tree/master/src/pages/popovers/basic', '_system');
+  /**
+   * open URL link in browser
+   * @param uri URI to open
+   */
+  openLink(uri: string): void {
+    window.open(uri, '_system');
+  }
+
+  /**
+   * copy result text
+   * @param text text to copy
+   */
+  copy(text: string): void {
+    // copy (save) result to clipboard
+    this.clipboard.copy(text);
+
+    // notify user (show toast)
+    const toast = this.toastCtrl.create({
+      message: 'Copied to clipboard',
+      duration: 1500,
+      position: 'middle',
+      dismissOnPageChange: true
+    });
+
+    toast.present();
+  }
+
+  /**
+   * check if result is valid URI
+   * @param uri URI to check
+   */
+  isValidWebUri(uri: string): boolean {
+    return isWebUri(uri);
   }
 
   /** dismiss (close) modal window */

@@ -1,6 +1,11 @@
 $dark-color: lighten(map-get($colors, 'dark'), 10%);
+$shadow-color: lighten(map-get($colors, 'dark'), 60%);
 
 page-result {
+  .shadow-title {
+    color: $shadow-color;
+  }
+
   .content-format {
     color: $dark-color;
   }

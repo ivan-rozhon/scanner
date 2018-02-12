@@ -1,32 +1,50 @@
 <ion-content>
   <ion-list no-border>
     <ion-list-header>
-      Settings
+      Scan settings
       <button ion-button outline class="close-btn" (click)="close()">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-list-header>
 
     <ion-item>
-      <ion-toggle [checked]="storageProvider.storageValues.showFlipCameraButton" (ionChange)="updateValue('showFlipCameraButton', $event)"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.showFlipCameraButton" (ionChange)="updateValue('showFlipCameraButton', $event.checked)"></ion-toggle>
       <ion-label>
-        Enable flip camera
+        Flip camera button
       </ion-label>
     </ion-item>
 
     <ion-item>
-      <ion-toggle [checked]="storageProvider.storageValues.showTorchButton" (ionChange)="updateValue('showTorchButton', $event)"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.showTorchButton" (ionChange)="updateValue('showTorchButton', $event.checked)"></ion-toggle>
       <ion-label>
-        Show torch button
+        Torch button
       </ion-label>
     </ion-item>
 
     <ion-item>
-      <ion-toggle [checked]="storageProvider.storageValues.showResultType" (ionChange)="updateValue('showResultType', $event)"></ion-toggle>
+      <ion-toggle [checked]="storageProvider.storageValues.torchOn" (ionChange)="updateValue('torchOn', $event.checked)"></ion-toggle>
       <ion-label>
-        Show result type
+        Torch on
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list no-border radio-group>
+    <ion-item>
+      <ion-toggle [checked]="storageProvider.storageValues.fixedOrientation" (ionChange)="updateValue('fixedOrientation', $event.checked)"></ion-toggle>
+      <ion-label>
+        Fixed orientation
       </ion-label>
     </ion-item>
 
+    <ion-item>
+      <ion-label>Portrait</ion-label>
+      <ion-radio [checked]="storageProvider.storageValues.orientation === 'portrait'" value="portrait" [disabled]="!storageProvider.storageValues.fixedOrientation" (ionSelect)="updateValue('orientation', $event)"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Landscape</ion-label>
+      <ion-radio [checked]="storageProvider.storageValues.orientation === 'landscape'" value="landscape" [disabled]="!storageProvider.storageValues.fixedOrientation" (ionSelect)="updateValue('orientation', $event)"></ion-radio>
+    </ion-item>
   </ion-list>
 </ion-content>

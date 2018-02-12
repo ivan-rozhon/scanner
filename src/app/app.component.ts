@@ -28,7 +28,7 @@ export class MyApp implements OnInit {
 
   ngOnInit(): void {
     // load user settings
-    this.storageProvider.getValues('showFlipCameraButton', 'showTorchButton', 'showResultType');
+    this.storageProvider.getValues('showFlipCameraButton', 'showTorchButton', 'torchOn', 'fixedOrientation', 'orientation');
   }
 }
 

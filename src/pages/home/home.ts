@@ -28,6 +28,11 @@ export class HomePage{
         showFlipCameraButton: this.storageProvider.storageValues.showFlipCameraButton,
         showTorchButton: this.storageProvider.storageValues.showTorchButton,
         prompt: '',
+        orientation: this.storageProvider.storageValues.fixedOrientation
+          // fix orientation if fixed orientation is enabled
+          ? this.storageProvider.storageValues.orientation
+          : 'none',
+        torchOn: this.storageProvider.storageValues.torchOn,
         resultDisplayDuration: 0
       })
       .then((barcodeData) => {
