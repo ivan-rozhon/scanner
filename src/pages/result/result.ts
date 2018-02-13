@@ -31,7 +31,8 @@ export class ResultPage {
    * @param uri URI to open
    */
   openLink(uri: string): void {
-    window.open(uri, '_system');
+    // (if uri starts with 'www' add 'http' protocol)
+    window.open(uri.startsWith('www.') ? `http://${uri}`: uri, '_system');
   }
 
   /**
@@ -58,7 +59,10 @@ export class ResultPage {
    * @param uri URI to check
    */
   isValidWebUri(uri: string): boolean {
-    return isWebUri(uri);
+    return uri.startsWith('www.')
+      // if uri starts with 'www' add 'http' protocol
+      ? isWebUri(`http://${uri}`)
+      : isWebUri(uri);
   }
 
   /** dismiss (close) modal window */

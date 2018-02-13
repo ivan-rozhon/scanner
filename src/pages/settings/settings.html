@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-list no-border>
+  <ion-list no-border radio-group>
     <ion-list-header>
       Scan settings
       <button ion-button outline class="close-btn" (click)="close()">
@@ -27,9 +27,7 @@
         Torch on
       </ion-label>
     </ion-item>
-  </ion-list>
 
-  <ion-list no-border radio-group>
     <ion-item>
       <ion-toggle [checked]="storageProvider.storageValues.fixedOrientation" (ionChange)="updateValue('fixedOrientation', $event.checked)"></ion-toggle>
       <ion-label>
@@ -39,12 +37,14 @@
 
     <ion-item>
       <ion-label>Portrait</ion-label>
-      <ion-radio [checked]="storageProvider.storageValues.orientation === 'portrait'" value="portrait" [disabled]="!storageProvider.storageValues.fixedOrientation" (ionSelect)="updateValue('orientation', $event)"></ion-radio>
+      <ion-radio [checked]="storageProvider.storageValues.orientation === 'portrait'" value="portrait" [disabled]="!storageProvider.storageValues.fixedOrientation"
+        (ionSelect)="updateValue('orientation', $event)"></ion-radio>
     </ion-item>
 
     <ion-item>
       <ion-label>Landscape</ion-label>
-      <ion-radio [checked]="storageProvider.storageValues.orientation === 'landscape'" value="landscape" [disabled]="!storageProvider.storageValues.fixedOrientation" (ionSelect)="updateValue('orientation', $event)"></ion-radio>
+      <ion-radio [checked]="storageProvider.storageValues.orientation === 'landscape'" value="landscape" [disabled]="!storageProvider.storageValues.fixedOrientation"
+        (ionSelect)="updateValue('orientation', $event)"></ion-radio>
     </ion-item>
   </ion-list>
 </ion-content>
