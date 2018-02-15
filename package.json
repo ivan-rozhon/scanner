@@ -12,14 +12,14 @@
     "ionic:serve": "ionic-app-scripts serve"
   },
   "dependencies": {
-    "@angular/common": "5.2.4",
-    "@angular/compiler": "5.2.4",
-    "@angular/compiler-cli": "5.2.4",
-    "@angular/core": "5.2.4",
-    "@angular/forms": "5.2.4",
-    "@angular/http": "5.2.4",
-    "@angular/platform-browser": "5.2.4",
-    "@angular/platform-browser-dynamic": "5.2.4",
+    "@angular/common": "5.2.5",
+    "@angular/compiler": "5.2.5",
+    "@angular/compiler-cli": "5.2.5",
+    "@angular/core": "5.2.5",
+    "@angular/forms": "5.2.5",
+    "@angular/http": "5.2.5",
+    "@angular/platform-browser": "5.2.5",
+    "@angular/platform-browser-dynamic": "5.2.5",
     "@ionic-native/barcode-scanner": "4.5.3",
     "@ionic-native/clipboard": "4.5.3",
     "@ionic-native/core": "4.5.3",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.8",
-    "typescript": "2.7.1"
+    "typescript": "2.7.2"
   },
   "description": "Simple QR code and barcode scanner app",
   "cordova": {

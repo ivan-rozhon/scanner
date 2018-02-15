@@ -18,7 +18,7 @@ export class HomePage{
     public popoverCtrl: PopoverController,
     public barcodeScanner: BarcodeScanner,
     public storageProvider: StorageProvider
-  ) {}
+  ) { }
 
   /** activate camera to scan barcode and handle result */
   scan(): void {
