@@ -2,7 +2,8 @@
 
   <ion-navbar>
     <ion-title class="app-title">
-      Result <span class="shadow-title">| QR/BC Scanner</span>
+      Result
+      <span class="shadow-title">| QR/BC Scanner</span>
     </ion-title>
   </ion-navbar>
 
@@ -11,14 +12,32 @@
 <ion-content>
   <div padding class="content-format">{{ format | translate }}</div>
 
-  <div padding class="result">{{ text }}</div>
+  <div padding class="result">
+    <!-- <ion-icon *ngIf="isUri(text)" name="link"></ion-icon> -->
+    <!-- TODO... add icons -->
+    {{ printResult(text) }}
+  </div>
 
   <div class="buttons">
-    <button *ngIf="isValidWebUri(text)" ion-button full icon-start (click)="openLink(text)">
-      <ion-icon name="link"></ion-icon>
-      Open URL
+    <!-- Open URL in browser -->
+    <button *ngIf="isUri(text)" ion-button full icon-start (click)="openLink(text)">
+      <ion-icon name="globe"></ion-icon>
+      Open
     </button>
 
+    <!-- Send SMS -->
+    <button *ngIf="isTel(text)" ion-button full icon-start (click)="call(text)">
+        <ion-icon name="call"></ion-icon>
+        Call
+    </button>
+
+    <!-- Send SMS -->
+    <button *ngIf="isSms(text)" ion-button full icon-start (click)="sendSms(text)">
+      <ion-icon name="text"></ion-icon>
+      Send
+    </button>
+
+    <!-- Copy result to clipboard -->
     <button ion-button full icon-start (click)="copy(text)">
       <ion-icon name="copy"></ion-icon>
       Copy

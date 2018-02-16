@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { IonicStorageModule } from '@ionic/storage';
 import { Clipboard } from '@ionic-native/clipboard';
+import { SMS } from '@ionic-native/sms';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -42,6 +43,7 @@ import { StorageProvider } from '../providers/storage/storage';
     BarcodeScanner,
     StorageProvider,
     Clipboard,
+    SMS,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
