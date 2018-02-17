@@ -13,9 +13,13 @@
   <div padding class="content-format">{{ format | translate }}</div>
 
   <div padding class="result">
-    <!-- <ion-icon *ngIf="isUri(text)" name="link"></ion-icon> -->
-    <!-- TODO... add icons -->
-    {{ printResult(text) }}
+    <ion-icon *ngIf="isUri(text)" name="link"></ion-icon>
+    <ion-icon *ngIf="isTel(text)" name="call"></ion-icon>
+    <ion-icon *ngIf="isSms(text)" name="text"></ion-icon>
+    <ion-icon *ngIf="isGeo(text)" name="compass"></ion-icon>
+    <div class="result-text">
+      {{ printResult(text) }}
+    </div>
   </div>
 
   <div class="buttons">
@@ -25,7 +29,7 @@
       Open
     </button>
 
-    <!-- Send SMS -->
+    <!-- Call -->
     <button *ngIf="isTel(text)" ion-button full icon-start (click)="call(text)">
         <ion-icon name="call"></ion-icon>
         Call
@@ -36,6 +40,18 @@
       <ion-icon name="text"></ion-icon>
       Send
     </button>
+
+    <!-- Show location -->
+    <button *ngIf="isGeo(text)" ion-button full icon-start (click)="locateOrNavigate(text)">
+      <ion-icon name="locate"></ion-icon>
+      Locate
+    </button>
+
+    <!-- Navigate to location -->
+    <!-- <button *ngIf="isGeo(text)" ion-button full icon-start (click)="locateOrNavigate(text, true)">
+      <ion-icon name="navigate"></ion-icon>
+      Navigate
+    </button> -->
 
     <!-- Copy result to clipboard -->
     <button ion-button full icon-start (click)="copy(text)">

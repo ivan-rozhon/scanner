@@ -18,7 +18,14 @@ export class HomePage{
     public popoverCtrl: PopoverController,
     public barcodeScanner: BarcodeScanner,
     public storageProvider: StorageProvider
-  ) { }
+  ) {
+    // DEBUG
+    // this.modalCtrl.create(ResultPage, {
+    //   text: 'geo:48.267,16.390',
+    //   // text: 'google.com',
+    //   format: 'QR_CODE'
+    // }).present();
+  }
 
   /** activate camera to scan barcode and handle result */
   scan(): void {

@@ -21,7 +21,17 @@ page-result {
   }
 
   .result {
+    display: flex;
+    flex-flow: row nowrap;
     font-size: 20px;
+
+    & .icon {
+      margin: 0 .5em 0 0;
+    }
+
+    .result-text {
+      word-break: break-all;
+    }
   }
 
   .hidden {

@@ -45,7 +45,23 @@ export class ResultPage {
 
     else if (this.isTel(result)) {
       // return just all after identifier
-      return [...splitted].slice(1).join(':');;
+      return [...splitted].slice(1).join(':');
+    }
+
+    else if (this.isGeo(result)) {
+      // get coordinations
+      const geoArr = [...splitted].slice(1).join(':').split(',');
+
+      let geoText = '';
+
+      // add each coordinate separated by coma and space
+      for (const i in geoArr) {
+        geoText = geoText.length
+          ? `${geoText}, ${geoArr[i]}`
+          : geoArr[i];
+      }
+
+      return geoText;
     }
 
     return result;
@@ -62,11 +78,11 @@ export class ResultPage {
 
   /**
    * copy result text
-   * @param text text to copy
+   * @param result text to copy
    */
-  copy(text: string): void {
+  copy(result: string): void {
     // copy (save) result to clipboard
-    this.clipboard.copy(text);
+    this.clipboard.copy(result);
 
     // notify user (show toast)
     const toast = this.toastCtrl.create({
@@ -81,7 +97,7 @@ export class ResultPage {
 
   /**
    * send sms (open native sms app with number & text)
-   * @param result
+   * @param result number and text
    */
   sendSms(result: string): void {
     // split result blocks - identificator, number, text
@@ -89,13 +105,13 @@ export class ResultPage {
 
     // blocks must contains: identificator, number, text
     if (blocks.length >= 3) {
-        // phone number is after identificator
-        const number = blocks[1];
-        // join all strings after number
-        const text = [...blocks].slice(2).join(':');
+      // phone number is after identificator
+      const number = blocks[1];
+      // join all strings after number
+      const text = [...blocks].slice(2).join(':');
 
-        // open native sms app with params
-        this.sms.send(number, text, { android: { intent: 'INTENT' }});
+      // open native sms app with params
+      this.sms.send(number, text, { android: { intent: 'INTENT' } });
     }
   }
 
@@ -109,6 +125,28 @@ export class ResultPage {
   }
 
   /**
+   * open map app with coordinations
+   * @param result coordinations
+   */
+  locateOrNavigate(result: string, navigate?: boolean): void {
+    // split result blocks - identificator, coordinations
+    const blocks = result.split(':');
+    // get only coordinations
+    const coordinations = [...blocks].slice(1).join(':');
+
+    // TODO... open navigation (between two locations)
+    // window.open(
+    //   navigate
+    //     ? `geo:?daddr=${coordinations}`
+    //     : `geo:?q=${coordinations}`,
+    //   '_system'
+    // );
+
+    // open maps app with coordinations
+    window.open(`geo:?q=${coordinations}`, '_system');
+  }
+
+  /**
    * check if result is valid URI
    * @param text result text to check
    */
@@ -117,8 +155,23 @@ export class ResultPage {
       // if uri does not starts with 'http' protocol, add it
       ? isWebUri(text)
       : isWebUri(`http://${text}`)) &&
+      // check also via regex
+      this.isUriRegex(text) &&
       // check other available formats
-      !this.isSms(text) && !this.isTel(text);
+      !this.isSms(text) && !this.isTel(text) &&
+      // true URI only if it is QR code
+      this.format === 'QR_CODE';
+  }
+
+  /**
+   * helper URI test regex
+   * @param text string to test
+   */
+  isUriRegex(text): boolean {
+    // https://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url
+    const regex = /^(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/gi;
+
+    return regex.test(text);
   }
 
   /**
@@ -130,7 +183,9 @@ export class ResultPage {
     const lowerText = text.toLowerCase();
 
     // valid identificators are 'sms:' and 'smsto:'
-    return lowerText.startsWith('sms:') || lowerText.startsWith('smsto:');
+    return lowerText.startsWith('sms:') || lowerText.startsWith('smsto:') &&
+      // true only if it is QR code
+      this.format === 'QR_CODE';
   }
 
   /**
@@ -142,7 +197,22 @@ export class ResultPage {
     const lowerText = text.toLowerCase();
 
     // valid identificator is 'tel:'
-    return lowerText.startsWith('tel:');
+    return lowerText.startsWith('tel:') &&
+      // true only if it is QR code
+      this.format === 'QR_CODE';
+  }
+
+  /**
+   * check if result is in QR GEO format
+   * @param text result text to check
+   */
+  isGeo(text: string): boolean {
+    // convert result string to lower case
+    const lowerText = text.toLowerCase();
+
+    return lowerText.startsWith('geo:') &&
+      // true only if it is QR code
+      this.format === 'QR_CODE';
   }
 
   /** dismiss (close) modal window */
