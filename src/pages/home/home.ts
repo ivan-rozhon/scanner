@@ -21,7 +21,9 @@ export class HomePage{
   ) {
     // DEBUG
     // this.modalCtrl.create(ResultPage, {
-    //   text: 'geo:48.267,16.390',
+    //   // text: 'mailto:email@example.com?subject=email subject&body=Email text',
+    //   text: 'MATMSG:TO: email@example.com;SUB:email subject;BODY:Email text;;',
+    //   // text: 'SMTP:ivan.rozhon@gmail.com:email :::subject:Em::ail text',
     //   // text: 'google.com',
     //   format: 'QR_CODE'
     // }).present();

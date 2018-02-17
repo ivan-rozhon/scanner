@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Clipboard } from '@ionic-native/clipboard';
 import { SMS } from '@ionic-native/sms';
+import { EmailComposer } from '@ionic-native/email-composer';
+import { LaunchNavigator } from '@ionic-native/launch-navigator';
 import { ViewController, NavParams, ToastController } from 'ionic-angular';
 
 import { isWebUri } from 'valid-url';
@@ -21,11 +23,15 @@ export class ResultPage {
     public storageProvider: StorageProvider,
     public toastCtrl: ToastController,
     private clipboard: Clipboard,
-    private sms: SMS
+    private sms: SMS,
+    private emailComposer: EmailComposer,
+    private launchNavigator: LaunchNavigator
   ) {
     // assign result params
     this.text = this.params.get('text');
     this.format = this.params.get('format');
+
+    // DEBUG
   }
 
   /**
@@ -39,13 +45,17 @@ export class ResultPage {
     if (this.isSms(result)) {
       const smsText = [...splitted].slice(2).join(':');
 
-      // return number and text of SMS separated by space
-      return `${splitted[1]} ${smsText}`;
+      // return number and text of SMS separated by pipe
+      return `${splitted[1]} | ${smsText}`;
     }
 
     else if (this.isTel(result)) {
       // return just all after identifier
       return [...splitted].slice(1).join(':');
+    }
+
+    else if (this.isMail(result)) {
+      return [...this.parseMail(result)].join(' | ');
     }
 
     else if (this.isGeo(result)) {
@@ -54,10 +64,10 @@ export class ResultPage {
 
       let geoText = '';
 
-      // add each coordinate separated by coma and space
+      // add each coordinate separated by pipe and space
       for (const i in geoArr) {
         geoText = geoText.length
-          ? `${geoText}, ${geoArr[i]}`
+          ? `${geoText} | ${geoArr[i]}`
           : geoArr[i];
       }
 
@@ -117,11 +127,94 @@ export class ResultPage {
 
   /**
    * call (open native phone app with number)
-   * @param result
+   * @param result phone number
    */
   call(result: string): void {
     // open native call app
     window.open(result, '_system');
+  }
+
+  /**
+   * send mail (open mail app)
+   * @param result e-mail, subject, text
+   */
+  sendMail(result: string): void {
+    // get parsed arr of data
+    const parsed = this.parseMail(result);
+
+    // send e-mail via email composer
+    this.emailComposer.open({
+      to: parsed[0],
+      subject: parsed[1],
+      body: parsed[2]
+    });
+  }
+
+  /**
+   * parse email data from QR code
+   * @param data e-mail, subject, text
+   */
+  parseMail(data: string): string[] {
+    // split result parts - e-mail, subject, text
+    const parts = data.split(':');
+    // get indentifier
+    const identifier = parts[0].toLowerCase();
+
+    // remove identifier from data
+    data = [...parts].slice(1).join(':');
+
+    let mail = [];
+
+    switch (identifier) {
+      case 'mailto':
+        mail = [
+          this.getStringAfter(`mailto:${data}`, 'mailto:', '?'),
+          this.getStringAfter(data, 'subject=', '&'),
+          this.getStringAfter(data, 'body=')
+        ]
+
+        break;
+
+      case 'matmsg':
+        mail = [
+          this.getStringAfter(data, 'TO:', ';'),
+          this.getStringAfter(data, 'SUB:', ';'),
+          this.getStringAfter(data, 'BODY:', ';')
+        ]
+
+        break;
+
+      case 'smtp':
+        // split by ':'
+        const smtp = data.split(':');
+
+        // ':' is separator of parts (like in sms)
+        mail[0] = smtp[0].trim();
+        mail[1] = smtp[1].trim();
+        mail[2] = [...smtp].slice(2).join(':').trim();
+
+        break;
+    }
+
+    return mail;
+  }
+
+  /**
+   * get string between splitter string ('TO:') and specified char
+   * @param data data to extract
+   * @param splitter splitter string
+   * @param endChar char which will be end of extract
+   */
+  getStringAfter(data: string, splitter: string, endChar?: string): string {
+    if (!data.includes(splitter) || !data.includes(endChar ? endChar : '')) { return ''; }
+
+    // get second part of splitted data (after splitter)
+    data = [...data.split(splitter)][1];
+
+    // extract part of string
+    return endChar
+      ? data.substr(0, data.indexOf(endChar)).trim()
+      : data;
   }
 
   /**
@@ -134,16 +227,21 @@ export class ResultPage {
     // get only coordinations
     const coordinations = [...blocks].slice(1).join(':');
 
-    // TODO... open navigation (between two locations)
-    // window.open(
-    //   navigate
-    //     ? `geo:?daddr=${coordinations}`
-    //     : `geo:?q=${coordinations}`,
-    //   '_system'
-    // );
+    if (navigate) {
+      // open navigation (between two locations)
+      this.launchNavigator.navigate(coordinations);
+    } else {
+      // open maps app with coordinations
+      window.open(`geo:?q=${coordinations}`, '_system');
+    }
+  }
 
-    // open maps app with coordinations
-    window.open(`geo:?q=${coordinations}`, '_system');
+  /**
+   * search result in browser
+   * @param result string to search
+   */
+  search(result: string): void {
+    window.open(`https://www.google.cz/search?q=${result}`, '_system');
   }
 
   /**
@@ -213,6 +311,28 @@ export class ResultPage {
     return lowerText.startsWith('geo:') &&
       // true only if it is QR code
       this.format === 'QR_CODE';
+  }
+
+  /**
+   * check if result is in QR MAIL format
+   * @param text result text to check
+   */
+  isMail(text: string): boolean {
+    // convert result string to lower case
+    const lowerText = text.toLowerCase();
+
+    // check valid identificators are 'mailto:', 'MATMSG:' and 'SMTP:'
+    return lowerText.startsWith('mailto:') || lowerText.startsWith('matmsg:') || lowerText.startsWith('smtp:') &&
+      // true only if it is QR code
+      this.format === 'QR_CODE';
+  }
+
+  /**
+   * check if result is not in any known format
+   * @param text result text to check
+   */
+  isSearch(text: string): boolean {
+    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text);
   }
 
   /** dismiss (close) modal window */

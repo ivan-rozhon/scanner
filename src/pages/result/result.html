@@ -16,7 +16,9 @@
     <ion-icon *ngIf="isUri(text)" name="link"></ion-icon>
     <ion-icon *ngIf="isTel(text)" name="call"></ion-icon>
     <ion-icon *ngIf="isSms(text)" name="text"></ion-icon>
+    <ion-icon *ngIf="isMail(text)" name="mail"></ion-icon>
     <ion-icon *ngIf="isGeo(text)" name="compass"></ion-icon>
+    <ion-icon *ngIf="isSearch(text)" name="qr-scanner"></ion-icon>
     <div class="result-text">
       {{ printResult(text) }}
     </div>
@@ -31,13 +33,19 @@
 
     <!-- Call -->
     <button *ngIf="isTel(text)" ion-button full icon-start (click)="call(text)">
-        <ion-icon name="call"></ion-icon>
-        Call
+      <ion-icon name="call"></ion-icon>
+      Call
     </button>
 
     <!-- Send SMS -->
     <button *ngIf="isSms(text)" ion-button full icon-start (click)="sendSms(text)">
       <ion-icon name="text"></ion-icon>
+      Send
+    </button>
+
+    <!-- Send E-mail -->
+    <button *ngIf="isMail(text)" ion-button full icon-start (click)="sendMail(text)">
+      <ion-icon name="mail"></ion-icon>
       Send
     </button>
 
@@ -48,10 +56,16 @@
     </button>
 
     <!-- Navigate to location -->
-    <!-- <button *ngIf="isGeo(text)" ion-button full icon-start (click)="locateOrNavigate(text, true)">
+    <button *ngIf="isGeo(text)" ion-button full icon-start (click)="locateOrNavigate(text, true)">
       <ion-icon name="navigate"></ion-icon>
       Navigate
-    </button> -->
+    </button>
+
+    <!-- Search for result -->
+    <button *ngIf="isSearch(text)" ion-button full icon-start (click)="search(text)">
+      <ion-icon name="search"></ion-icon>
+      Search
+    </button>
 
     <!-- Copy result to clipboard -->
     <button ion-button full icon-start (click)="copy(text)">
