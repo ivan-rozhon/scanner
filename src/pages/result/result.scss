@@ -10,6 +10,11 @@ page-result {
     color: $dark-color;
   }
 
+  .not-supported {
+    color: $shadow-color;
+    font-style: italic;
+  }
+
   .buttons {
     bottom: 0;
     position: absolute;

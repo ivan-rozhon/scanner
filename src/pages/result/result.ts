@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { ViewController, NavParams, ToastController } from 'ionic-angular';
+
+// native
 import { Clipboard } from '@ionic-native/clipboard';
 import { SMS } from '@ionic-native/sms';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { LaunchNavigator } from '@ionic-native/launch-navigator';
-import { ViewController, NavParams, ToastController } from 'ionic-angular';
 
 import { isWebUri } from 'valid-url';
 
@@ -55,7 +57,8 @@ export class ResultPage {
     }
 
     else if (this.isMail(result)) {
-      return [...this.parseMail(result)].join(' | ');
+      // return only filled items
+      return [...this.parseMail(result)].filter(o => o.length).join(' | ');
     }
 
     else if (this.isGeo(result)) {
@@ -72,6 +75,11 @@ export class ResultPage {
       }
 
       return geoText;
+    }
+
+    else if (this.isWifi(result)) {
+      // return only filled items
+      return [...this.parseWifi(result)].filter(o => o.length).join(' | ');
     }
 
     return result;
@@ -171,7 +179,7 @@ export class ResultPage {
           this.getStringAfter(`mailto:${data}`, 'mailto:', '?'),
           this.getStringAfter(data, 'subject=', '&'),
           this.getStringAfter(data, 'body=')
-        ]
+        ];
 
         break;
 
@@ -180,7 +188,7 @@ export class ResultPage {
           this.getStringAfter(data, 'TO:', ';'),
           this.getStringAfter(data, 'SUB:', ';'),
           this.getStringAfter(data, 'BODY:', ';')
-        ]
+        ];
 
         break;
 
@@ -241,7 +249,7 @@ export class ResultPage {
    * @param result string to search
    */
   search(result: string): void {
-    window.open(`https://www.google.cz/search?q=${result}`, '_system');
+    window.open(`https://www.google.cz/search?q=${encodeURI(result)}`, '_system');
   }
 
   /**
@@ -328,11 +336,45 @@ export class ResultPage {
   }
 
   /**
+   * check if result is in QR wifi format
+   * @param text result text to check
+   */
+  isWifi(text: string): boolean {
+    // convert result string to lower case
+    const lowerText = text.toLowerCase();
+
+    // check valid identificator 'WIFI:'
+    return lowerText.startsWith('wifi:') &&
+      // true only if it is QR code
+      this.format === 'QR_CODE';
+  }
+
+  /**
+   * parse wifi data from QR code
+   * @param data type, ssid, password
+   */
+  parseWifi(data: string): string[] {
+    // split result parts - type, ssid, password
+    const parts = data.split(':');
+
+    // remove identifier from data
+    data = [...parts].slice(1).join(':');
+
+    let wifi = [
+      this.getStringAfter(data, 'T:', ';'),
+      this.getStringAfter(data, 'S:', ';'),
+      this.getStringAfter(data, 'P:', ';')
+    ];
+
+    return wifi;
+  }
+
+  /**
    * check if result is not in any known format
    * @param text result text to check
    */
   isSearch(text: string): boolean {
-    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text);
+    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text) && !this.isWifi(text);
   }
 
   /** dismiss (close) modal window */

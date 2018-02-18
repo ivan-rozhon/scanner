@@ -18,10 +18,15 @@
     <ion-icon *ngIf="isSms(text)" name="text"></ion-icon>
     <ion-icon *ngIf="isMail(text)" name="mail"></ion-icon>
     <ion-icon *ngIf="isGeo(text)" name="compass"></ion-icon>
+    <ion-icon *ngIf="isWifi(text)" name="wifi"></ion-icon>
     <ion-icon *ngIf="isSearch(text)" name="qr-scanner"></ion-icon>
     <div class="result-text">
       {{ printResult(text) }}
     </div>
+  </div>
+
+  <div *ngIf="isWifi(text)" padding class="not-supported">
+    Currently not supported.
   </div>
 
   <div class="buttons">
@@ -61,14 +66,20 @@
       Navigate
     </button>
 
+    <!-- Connect to WiFi -->
+    <button *ngIf="isWifi(text)" ion-button full icon-start disabled>
+      <ion-icon name="wifi"></ion-icon>
+      Connect
+    </button>
+
     <!-- Search for result -->
-    <button *ngIf="isSearch(text)" ion-button full icon-start (click)="search(text)">
+    <button *ngIf="isSearch(text)" ion-button full icon-start (click)="search(printResult(text))">
       <ion-icon name="search"></ion-icon>
       Search
     </button>
 
     <!-- Copy result to clipboard -->
-    <button ion-button full icon-start (click)="copy(text)">
+    <button ion-button full icon-start (click)="copy(printResult(text))">
       <ion-icon name="copy"></ion-icon>
       Copy
     </button>
