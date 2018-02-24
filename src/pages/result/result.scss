@@ -16,8 +16,6 @@ page-result {
   }
 
   .buttons {
-    bottom: 0;
-    position: absolute;
     width: 100%;
 
     & > button {
@@ -27,6 +25,7 @@ page-result {
 
   .result {
     display: flex;
+    flex: 1;
     flex-flow: row nowrap;
     font-size: 20px;
 
@@ -35,11 +34,17 @@ page-result {
     }
 
     .result-text {
+      overflow: auto;
       word-break: break-all;
     }
   }
 
   .hidden {
     display: none;
+  }
+
+  .scroll-content {
+    display: flex;
+    flex-flow: column nowrap;
   }
 }

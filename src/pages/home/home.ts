@@ -21,11 +21,19 @@ export class HomePage{
   ) {
     // DEBUG
     // this.modalCtrl.create(ResultPage, {
-    //   text: 'WIFI:T:WPA;S:mynetwork;P:mypass;;',
+    //   // text: 'WIFI:T:WPA;S:mynetwork;P:mypass;;',
     //   // text: 'mailto:email@example.com?subject=email subject&body=Email text',
     //   // text: 'MATMSG:TO: email@example.com;SUB:email subject;BODY:Email text;;',
     //   // text: 'SMTP:ivan.rozhon@gmail.com:email :::subject:Em::ail text',
-    //   // text: 'google.com',
+    //   text: 'google.com',
+    //   // text: `
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
+    //   // `,
     //   format: 'QR_CODE'
     // }).present();
   }
