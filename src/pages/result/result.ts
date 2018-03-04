@@ -10,6 +10,7 @@ import { LaunchNavigator } from '@ionic-native/launch-navigator';
 import { isWebUri } from 'valid-url';
 
 import { StorageProvider } from '../../providers/storage/storage';
+import { ParseProvider, Contact } from './../../providers/parse/parse';
 
 @Component({
   selector: 'page-result',
@@ -27,7 +28,8 @@ export class ResultPage {
     private clipboard: Clipboard,
     private sms: SMS,
     private emailComposer: EmailComposer,
-    private launchNavigator: LaunchNavigator
+    private launchNavigator: LaunchNavigator,
+    private parseProvider: ParseProvider
   ) {
     // assign result params
     this.text = this.params.get('text');
@@ -58,7 +60,7 @@ export class ResultPage {
 
     else if (this.isMail(result)) {
       // return only filled items
-      return [...this.parseMail(result)].filter(o => o.length).join(' | ');
+      return [...this.parseProvider.parseMail(result)].filter(o => o.length).join(' | ');
     }
 
     else if (this.isGeo(result)) {
@@ -79,7 +81,18 @@ export class ResultPage {
 
     else if (this.isWifi(result)) {
       // return only filled items
-      return [...this.parseWifi(result)].filter(o => o.length).join(' | ');
+      return [...this.parseProvider.parseWifi(result)].filter(o => o.length).join(' | ');
+    }
+
+    else if (this.isContact(result)) {
+      // contact object
+      const contact: Contact = this.parseProvider.parseContact(result);
+
+      // get arr of contact property
+      const contactArr = Object.keys(contact).map(property => contact[property]);
+
+      // return only filled items
+      return [...contactArr].filter(o => o.length).join(' | ');
     }
 
     return result;
@@ -148,7 +161,7 @@ export class ResultPage {
    */
   sendMail(result: string): void {
     // get parsed arr of data
-    const parsed = this.parseMail(result);
+    const parsed = this.parseProvider.parseMail(result);
 
     // send e-mail via email composer
     this.emailComposer.open({
@@ -156,73 +169,6 @@ export class ResultPage {
       subject: parsed[1],
       body: parsed[2]
     });
-  }
-
-  /**
-   * parse email data from QR code
-   * @param data e-mail, subject, text
-   */
-  parseMail(data: string): string[] {
-    // split result parts - e-mail, subject, text
-    const parts = data.split(':');
-    // get indentifier
-    const identifier = parts[0].toLowerCase();
-
-    // remove identifier from data
-    data = [...parts].slice(1).join(':');
-
-    let mail = [];
-
-    switch (identifier) {
-      case 'mailto':
-        mail = [
-          this.getStringAfter(`mailto:${data}`, 'mailto:', '?'),
-          this.getStringAfter(data, 'subject=', '&'),
-          this.getStringAfter(data, 'body=')
-        ];
-
-        break;
-
-      case 'matmsg':
-        mail = [
-          this.getStringAfter(data, 'TO:', ';'),
-          this.getStringAfter(data, 'SUB:', ';'),
-          this.getStringAfter(data, 'BODY:', ';')
-        ];
-
-        break;
-
-      case 'smtp':
-        // split by ':'
-        const smtp = data.split(':');
-
-        // ':' is separator of parts (like in sms)
-        mail[0] = smtp[0].trim();
-        mail[1] = smtp[1].trim();
-        mail[2] = [...smtp].slice(2).join(':').trim();
-
-        break;
-    }
-
-    return mail;
-  }
-
-  /**
-   * get string between splitter string ('TO:') and specified char
-   * @param data data to extract
-   * @param splitter splitter string
-   * @param endChar char which will be end of extract
-   */
-  getStringAfter(data: string, splitter: string, endChar?: string): string {
-    if (!data.includes(splitter) || !data.includes(endChar ? endChar : '')) { return ''; }
-
-    // get second part of splitted data (after splitter)
-    data = [...data.split(splitter)][1];
-
-    // extract part of string
-    return endChar
-      ? data.substr(0, data.indexOf(endChar)).trim()
-      : data;
   }
 
   /**
@@ -285,13 +231,8 @@ export class ResultPage {
    * @param text result text to check
    */
   isSms(text: string): boolean {
-    // convert result string to lower case
-    const lowerText = text.toLowerCase();
-
-    // valid identificators are 'sms:' and 'smsto:'
-    return lowerText.startsWith('sms:') || lowerText.startsWith('smsto:') &&
-      // true only if it is QR code
-      this.format === 'QR_CODE';
+    // check valid identificators 'sms:' and 'smsto:'
+    return this.qrCheck(text, 'sms:', 'smsto:');
   }
 
   /**
@@ -299,13 +240,8 @@ export class ResultPage {
    * @param text result text to check
    */
   isTel(text: string): boolean {
-    // convert result string to lower case
-    const lowerText = text.toLowerCase();
-
-    // valid identificator is 'tel:'
-    return lowerText.startsWith('tel:') &&
-      // true only if it is QR code
-      this.format === 'QR_CODE';
+    // check valid identificator 'tel:'
+    return this.qrCheck(text, 'tel:');
   }
 
   /**
@@ -313,12 +249,8 @@ export class ResultPage {
    * @param text result text to check
    */
   isGeo(text: string): boolean {
-    // convert result string to lower case
-    const lowerText = text.toLowerCase();
-
-    return lowerText.startsWith('geo:') &&
-      // true only if it is QR code
-      this.format === 'QR_CODE';
+    // check valid identificator 'geo:'
+    return this.qrCheck(text, 'geo:');
   }
 
   /**
@@ -326,13 +258,8 @@ export class ResultPage {
    * @param text result text to check
    */
   isMail(text: string): boolean {
-    // convert result string to lower case
-    const lowerText = text.toLowerCase();
-
-    // check valid identificators are 'mailto:', 'MATMSG:' and 'SMTP:'
-    return lowerText.startsWith('mailto:') || lowerText.startsWith('matmsg:') || lowerText.startsWith('smtp:') &&
-      // true only if it is QR code
-      this.format === 'QR_CODE';
+    // check valid identificators 'mailto:', 'MATMSG:' and 'SMTP:'
+    return this.qrCheck(text, 'mailto:', 'MATMSG:', 'SMTP:');
   }
 
   /**
@@ -340,33 +267,40 @@ export class ResultPage {
    * @param text result text to check
    */
   isWifi(text: string): boolean {
-    // convert result string to lower case
-    const lowerText = text.toLowerCase();
-
     // check valid identificator 'WIFI:'
-    return lowerText.startsWith('wifi:') &&
-      // true only if it is QR code
-      this.format === 'QR_CODE';
+    return this.qrCheck(text, 'WIFI:');
   }
 
   /**
-   * parse wifi data from QR code
-   * @param data type, ssid, password
+   * check if result is in QR contact (vcard, bizcard, mecard) format
+   * @param text result text to check
    */
-  parseWifi(data: string): string[] {
-    // split result parts - type, ssid, password
-    const parts = data.split(':');
+  isContact(text: string): boolean {
+    // check valid identificators 'BIZCARD:', 'BEGIN:VCARD' and 'MECARD:'
+    return this.qrCheck(text, 'BIZCARD:', 'BEGIN:VCARD', 'MECARD:');
+  }
 
-    // remove identifier from data
-    data = [...parts].slice(1).join(':');
+  /**
+   * check if result is in specific QR format
+   * @param text result text to check
+   * @param types all types to check
+   */
+  qrCheck(text: string, ...types: string[]): boolean {
+    // convert result string to lower case
+    const lowerText = text.toLowerCase();
+    // declare initial state of result (false)
+    let isType = false;
 
-    let wifi = [
-      this.getStringAfter(data, 'T:', ';'),
-      this.getStringAfter(data, 'S:', ';'),
-      this.getStringAfter(data, 'P:', ';')
-    ];
+    // check all input types (one must be true)
+    [...types,].map(type => {
+      // compare lower cases of formats (results must begin with 'type')
+      if (lowerText.startsWith(type.toLowerCase())) {
+        isType = true;
+      }
+    })
 
-    return wifi;
+    // result must be also QR code
+    return this.format === 'QR_CODE' && isType;
   }
 
   /**
@@ -374,7 +308,7 @@ export class ResultPage {
    * @param text result text to check
    */
   isSearch(text: string): boolean {
-    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text) && !this.isWifi(text);
+    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text) && !this.isWifi(text) && !this.isContact(text);
   }
 
   /** dismiss (close) modal window */

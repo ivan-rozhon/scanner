@@ -21,11 +21,13 @@ export class HomePage{
   ) {
     // DEBUG
     // this.modalCtrl.create(ResultPage, {
+    //   text: `MECARD:N:Owen,Sean;NOTE:note lol;BDAY:20140504;ADR:76 9th Avenue, 4th Floor, New York, NY 10011;NICKNAME:Pif;URL:http://www.evenx.com;TEL:12125551212;EMAIL:srowen@example.com;;`,
+    //   // text: 'BIZCARD:N:Sean;X:Owen;T:Software Engineer;C:Google;A:76 9th Avenue, New York, NY 10011;B:+12125551212;E:srowen@google.com;;',
     //   // text: 'WIFI:T:WPA;S:mynetwork;P:mypass;;',
     //   // text: 'mailto:email@example.com?subject=email subject&body=Email text',
     //   // text: 'MATMSG:TO: email@example.com;SUB:email subject;BODY:Email text;;',
     //   // text: 'SMTP:ivan.rozhon@gmail.com:email :::subject:Em::ail text',
-    //   text: 'google.com',
+    //   // text: 'google.com',
     //   // text: `
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com

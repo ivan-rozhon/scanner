@@ -19,6 +19,7 @@
     <ion-icon *ngIf="isMail(text)" name="mail"></ion-icon>
     <ion-icon *ngIf="isGeo(text)" name="compass"></ion-icon>
     <ion-icon *ngIf="isWifi(text)" name="wifi"></ion-icon>
+    <ion-icon *ngIf="isContact(text)" name="person"></ion-icon>
     <ion-icon *ngIf="isSearch(text)" name="qr-scanner"></ion-icon>
     <div class="result-text">
       {{ printResult(text) }}

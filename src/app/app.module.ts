@@ -18,6 +18,7 @@ import { ResultPage } from './../pages/result/result';
 import { PipesModule } from '../pipes/pipes.module';
 import { SettingsPage } from '../pages/settings/settings';
 import { StorageProvider } from '../providers/storage/storage';
+import { ParseProvider } from '../providers/parse/parse';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { StorageProvider } from '../providers/storage/storage';
     SMS,
     LaunchNavigator,
     EmailComposer,
+    ParseProvider,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
