@@ -1,9 +1,10 @@
 $dark-color: lighten(map-get($colors, 'dark'), 10%);
 $shadow-color: lighten(map-get($colors, 'dark'), 60%);
+$blue-200: lighten(map-get($colors, 'primary'), 10%);
 
 page-result {
   .shadow-title {
-    color: $shadow-color;
+    color: $blue-200;
   }
 
   .content-format {
