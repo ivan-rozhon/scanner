@@ -21,7 +21,7 @@ export class HomePage{
   ) {
     // DEBUG
     // this.modalCtrl.create(ResultPage, {
-    //   text: `MECARD:N:Owen,Sean;NOTE:note lol;BDAY:20140504;ADR:76 9th Avenue, 4th Floor, New York, NY 10011;NICKNAME:Pif;URL:http://www.evenx.com;TEL:12125551212;EMAIL:srowen@example.com;;`,
+    //   // text: `MECARD:N:Owen,Sean;NOTE:note lol;BDAY:20140504;ADR:76 9th Avenue, 4th Floor, New York, NY 10011;NICKNAME:Pif;URL:http://www.evenx.com;TEL:12125551212;EMAIL:srowen@example.com;;`,
     //   // text: 'BIZCARD:N:Sean;X:Owen;T:Software Engineer;C:Google;A:76 9th Avenue, New York, NY 10011;B:+12125551212;E:srowen@google.com;;',
     //   // text: 'WIFI:T:WPA;S:mynetwork;P:mypass;;',
     //   // text: 'mailto:email@example.com?subject=email subject&body=Email text',
@@ -36,6 +36,16 @@ export class HomePage{
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
     //   // `,
+    //   text: 'BEGIN:VCARD\nVERSION:3.0\n' +
+    //     'N:Gump;Forrest;;Mr.;\nFN:Forrest Gump\nORG:Bubba Gump Shrimp Co.\nTITLE:Shrimp Man\n' +
+    //     'PHOTO;VALUE=URI;TYPE=GIF:http://www.example.com/dir_photos/my_photo.gif\n' +
+    //     'TEL;TYPE=WORK,VOICE:(111) 555-1212\nTEL;TYPE=HOME,VOICE:(404) 555-1212\n' +
+    //     'ADR;TYPE=WORK,PREF:;;100 Waters Edge;Baytown;LA;30314;United States of America\n' +
+    //     'LABEL;TYPE=WORK,PREF:100 Waters Edge\nBaytown\, LA 30314\nUnited States of America\n' +
+    //     'ADR;TYPE=HOME:;;42 Plantation St.;Baytown;LA;30314;United States of America\n' +
+    //     'LABEL;TYPE=HOME:42 Plantation St.\nBaytown\, LA 30314\nUnited States of America\n' +
+    //     'EMAIL:forrestgump@example.com\nREV:2008-04-24T19:52:43Z\n' +
+    //     'END:VCARD',
     //   format: 'QR_CODE'
     // }).present();
   }

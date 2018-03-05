@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
 
+import * as vCard from 'vcf';
+
 export interface Contact {
   name: string;
+  tel: string;
+  email: string;
+  note?: string;
+  bday?: string;
+  address: string
+  url?: string;
+  nickname?: string;
+  job?: string;
+  company?: string;
 }
 
 @Injectable()
@@ -84,13 +95,21 @@ export class ParseProvider {
     // split result parts - e-mail, subject, text
     const parts = data.split(':');
     // get indentifier
-    const identifier = parts[0].toLowerCase();
+    let identifier = parts[0].toLowerCase();
+
+    // lower and trim string to compare
+    const lowerAndTrimmed = data.trim().toLowerCase();
+
+    // check if qr code is vcard and eventually set identifier to 'vcard'
+    identifier = lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard')
+      ? 'vcard'
+      : identifier;
 
     let contact = {} as Contact;
 
     switch (identifier) {
       case 'mecard':
-        contact = Object.assign({}, contact, {
+        contact = Object.assign({}, {
           name: this.getStringAfter(data, 'N:', ';')
             // split eventually name and last name separated by comma
             .split(',')
@@ -108,10 +127,45 @@ export class ParseProvider {
         });
 
         break;
+
+      case 'bizcard':
+        // compose full name
+        const fullName = `${this.getStringAfter(data, 'N:', ';')},${this.getStringAfter(data, 'X:', ';')}`
+
+        contact = Object.assign({}, {
+          name: fullName
+            // split eventually name and last name separated by comma
+            .split(',')
+            // trim spaces
+            .map(o => o.trim())
+            // join to one string
+            .join(' '),
+          job: this.getStringAfter(data, 'T:', ';'),
+          company: this.getStringAfter(data, 'C:', ';'),
+          address: this.getStringAfter(data, 'A:', ';'),
+          tel: this.getStringAfter(data, 'B:', ';'),
+          email: this.getStringAfter(data, 'E:', ';'),
+        });
+        break;
+
+      case 'vcard':
+        // parse data string as vCard object
+        const card = new vCard().parse(data);
+
+        // console.log(card.get('N')._data);
+
+        // console.log(card);
+
+        contact = Object.assign({}, contact, {
+          // name: card.get('N')._data
+        });
+        break;
     }
 
     return contact;
   }
+
+  // TODO... create method to properly parse data from vcard
 
   /**
    * conver bday string in format 'YYYYMMDD' to 'MM/DD/YYYY'

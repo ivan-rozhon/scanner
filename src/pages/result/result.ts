@@ -276,8 +276,13 @@ export class ResultPage {
    * @param text result text to check
    */
   isContact(text: string): boolean {
+    // lower and trim string to compare
+    const lowerAndTrimmed = text.trim().toLowerCase();
+
     // check valid identificators 'BIZCARD:', 'BEGIN:VCARD' and 'MECARD:'
-    return this.qrCheck(text, 'BIZCARD:', 'BEGIN:VCARD', 'MECARD:');
+    return this.qrCheck(text, 'BIZCARD:', 'MECARD:') ||
+      // specific case is vcard - it must begin and ends with...
+      (lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard'));
   }
 
   /**
@@ -287,7 +292,7 @@ export class ResultPage {
    */
   qrCheck(text: string, ...types: string[]): boolean {
     // convert result string to lower case
-    const lowerText = text.toLowerCase();
+    const lowerText = text.toLowerCase().trim();
     // declare initial state of result (false)
     let isType = false;
 
