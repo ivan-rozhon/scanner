@@ -4,6 +4,7 @@ import * as vCard from 'vcf';
 
 export interface Contact {
   name: string;
+  formatedName?: string;
   tel: string;
   email: string;
   note?: string;
@@ -13,6 +14,7 @@ export interface Contact {
   nickname?: string;
   job?: string;
   company?: string;
+  title?: string;
 }
 
 @Injectable()
@@ -152,20 +154,59 @@ export class ParseProvider {
         // parse data string as vCard object
         const card = new vCard().parse(data);
 
-        // console.log(card.get('N')._data);
-
-        // console.log(card);
-
-        contact = Object.assign({}, contact, {
-          // name: card.get('N')._data
+        contact = Object.assign({}, {
+          name: this.parseData(card, 'N'),
+          formatedName: this.parseData(card, 'fn'),
+          company: this.parseData(card, 'org'),
+          title: this.parseData(card, 'title'),
+          tel: this.parseData(card, 'tel'),
+          address: this.parseData(card, 'adr'),
+          email: this.parseData(card, 'email'),
         });
+
         break;
     }
 
     return contact;
   }
 
-  // TODO... create method to properly parse data from vcard
+  /**
+   * parse data by key from vCard data object
+   * @param card vCard object with data
+   * @param key key of value to parse (to get)
+   * @param separator optionaly define custom separator of result string
+   * @param joiner instead of separator it will be applied joiner (space)
+   */
+  parseData(card: vCard, key: string, separator: string = ';', joiner: string = ' '): string {
+    // get data according to key
+    const data = card.get(key);
+
+    if (Array.isArray(data)) {
+      // parsed result (value) is array
+      const result = [];
+
+      for (let i in data) {
+        if (data[i] && data[i]._data) {
+          // fill each value from data (if exists)
+          result.push(separator
+            // if separator defined, apply...
+            ? data[i]._data.split(separator).join(joiner)
+            : data[i]._data
+          );
+        }
+      }
+
+      // separate array values and join to one string
+      return result.join(' | ');
+    } else {
+      return data
+        ? separator
+          // if separator defined, apply...
+          ? data._data.split(separator).join(joiner)
+          : data._data
+        : '';
+    }
+  }
 
   /**
    * conver bday string in format 'YYYYMMDD' to 'MM/DD/YYYY'

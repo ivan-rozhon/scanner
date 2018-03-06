@@ -41,9 +41,9 @@ export class HomePage{
     //     'PHOTO;VALUE=URI;TYPE=GIF:http://www.example.com/dir_photos/my_photo.gif\n' +
     //     'TEL;TYPE=WORK,VOICE:(111) 555-1212\nTEL;TYPE=HOME,VOICE:(404) 555-1212\n' +
     //     'ADR;TYPE=WORK,PREF:;;100 Waters Edge;Baytown;LA;30314;United States of America\n' +
-    //     'LABEL;TYPE=WORK,PREF:100 Waters Edge\nBaytown\, LA 30314\nUnited States of America\n' +
+    //     'LABEL;TYPE=WORK,PREF:100 Waters Edge Baytown, LA 30314;United States of America\n' +
     //     'ADR;TYPE=HOME:;;42 Plantation St.;Baytown;LA;30314;United States of America\n' +
-    //     'LABEL;TYPE=HOME:42 Plantation St.\nBaytown\, LA 30314\nUnited States of America\n' +
+    //     'LABEL;TYPE=HOME:42 Plantation St.Baytown, LA 30314;United States of America\n' +
     //     'EMAIL:forrestgump@example.com\nREV:2008-04-24T19:52:43Z\n' +
     //     'END:VCARD',
     //   format: 'QR_CODE'
