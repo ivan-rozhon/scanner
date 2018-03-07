@@ -20,13 +20,14 @@
     <ion-icon *ngIf="isGeo(text)" name="compass"></ion-icon>
     <ion-icon *ngIf="isWifi(text)" name="wifi"></ion-icon>
     <ion-icon *ngIf="isContact(text)" name="person"></ion-icon>
+    <ion-icon *ngIf="isCalendar(text)" name="calendar"></ion-icon>
     <ion-icon *ngIf="isSearch(text)" name="qr-scanner"></ion-icon>
     <div class="result-text">
       {{ printResult(text) }}
     </div>
   </div>
 
-  <div *ngIf="isWifi(text)" padding class="not-supported">
+  <div *ngIf="isWifi(text) || isContact(text) || isCalendar(text)" padding class="not-supported">
     Currently not supported.
   </div>
 
@@ -71,6 +72,18 @@
     <button *ngIf="isWifi(text)" ion-button full icon-start disabled>
       <ion-icon name="wifi"></ion-icon>
       Connect
+    </button>
+
+    <!-- Add contact -->
+    <button *ngIf="isContact(text)" ion-button full icon-start disabled>
+      <ion-icon name="person-add"></ion-icon>
+      Add
+    </button>
+
+    <!-- Add event, todo, alarm, etc. -->
+    <button *ngIf="isCalendar(text)" ion-button full icon-start disabled>
+      <ion-icon name="calendar"></ion-icon>
+      Add
     </button>
 
     <!-- Search for result -->

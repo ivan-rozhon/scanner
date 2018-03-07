@@ -282,7 +282,30 @@ export class ResultPage {
     // check valid identificators 'BIZCARD:', 'BEGIN:VCARD' and 'MECARD:'
     return this.qrCheck(text, 'BIZCARD:', 'MECARD:') ||
       // specific case is vcard - it must begin and ends with...
-      (lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard'));
+      (lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard') && this.format === 'QR_CODE');
+  }
+
+  /**
+   * check if result is in QR iCal (VCALENDAR, VEVENT, VTODO, VCALENDAR, VALARM, VTIMEZONE) format
+   * @param text result text to check
+   */
+  isCalendar(text: string): boolean {
+    // all posible types
+    const typeArr = ['VCALENDAR', 'VEVENT', 'VTODO', 'VCALENDAR', 'VALARM', 'VTIMEZONE'];
+    // convert result string to lower case
+    const lowerText = text.toLowerCase().trim();
+    // init result
+    let isCalendar = false;
+
+    // check all types - ends and begins
+    typeArr.map(type => {
+      isCalendar = lowerText.includes(`BEGIN:${type}`.toLowerCase()) || lowerText.includes(`END:${type}`.toLowerCase())
+        ? true
+        : isCalendar;
+    });
+
+    // result must be also QR code
+    return this.format === 'QR_CODE' && isCalendar;
   }
 
   /**
@@ -313,7 +336,8 @@ export class ResultPage {
    * @param text result text to check
    */
   isSearch(text: string): boolean {
-    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) && !this.isGeo(text) && !this.isWifi(text) && !this.isContact(text);
+    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) &&
+      !this.isGeo(text) && !this.isWifi(text) && !this.isContact(text) && !this.isCalendar(text);
   }
 
   /** dismiss (close) modal window */
