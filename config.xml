@@ -85,6 +85,6 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-clipboard" spec="^1.1.1" />
     <plugin name="cordova-sms-plugin" spec="^0.1.11" />
-    <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="^4.1.3" />
     <plugin name="cordova-plugin-email-composer" spec="^0.8.15" />
+    <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="^4.1.5" />
 </widget>
