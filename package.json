@@ -42,7 +42,7 @@
     "ionic-angular": "3.9.2",
     "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "3.0.0",
-    "phonegap-plugin-barcodescanner": "^7.0.2",
+    "phonegap-plugin-barcodescanner": "^7.1.0",
     "rxjs": "5.5.7",
     "sw-toolbox": "3.6.0",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "^4.1.5",
@@ -60,13 +60,15 @@
       "cordova-plugin-device": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-splashscreen": {},
-      "phonegap-plugin-barcodescanner": {},
       "ionic-plugin-keyboard": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-clipboard": {},
       "cordova-sms-plugin": {},
       "cordova-plugin-email-composer": {},
-      "uk.co.workingedge.phonegap.plugin.launchnavigator": {}
+      "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
     },
     "platforms": [
       "android"
