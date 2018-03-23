@@ -25,6 +25,7 @@ export class HomePage{
     //   // text: 'BIZCARD:N:Sean;X:Owen;T:Software Engineer;C:Google;A:76 9th Avenue, New York, NY 10011;B:+12125551212;E:srowen@google.com;;',
     //   // text: 'WIFI:T:WPA;S:mynetwork;P:mypass;;',
     //   // text: 'mailto:email@example.com?subject=email subject&body=Email text',
+    //   // text: 'mailto:email@example.com',
     //   // text: 'MATMSG:TO: email@example.com;SUB:email subject;BODY:Email text;;',
     //   // text: 'SMTP:ivan.rozhon@gmail.com:email :::subject:Em::ail text',
     //   // text: 'google.com',
@@ -36,17 +37,18 @@ export class HomePage{
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
     //   //   loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com veeryyyy loooong.com
     //   // `,
-    //   // text: 'BEGIN:VCARD\nVERSION:3.0\n' +
-    //   //   'N:Gump;Forrest;;Mr.;\nFN:Forrest Gump\nORG:Bubba Gump Shrimp Co.\nTITLE:Shrimp Man\n' +
-    //   //   'PHOTO;VALUE=URI;TYPE=GIF:http://www.example.com/dir_photos/my_photo.gif\n' +
-    //   //   'TEL;TYPE=WORK,VOICE:(111) 555-1212\nTEL;TYPE=HOME,VOICE:(404) 555-1212\n' +
-    //   //   'ADR;TYPE=WORK,PREF:;;100 Waters Edge;Baytown;LA;30314;United States of America\n' +
-    //   //   'LABEL;TYPE=WORK,PREF:100 Waters Edge Baytown, LA 30314;United States of America\n' +
-    //   //   'ADR;TYPE=HOME:;;42 Plantation St.;Baytown;LA;30314;United States of America\n' +
-    //   //   'LABEL;TYPE=HOME:42 Plantation St.Baytown, LA 30314;United States of America\n' +
-    //   //   'EMAIL:forrestgump@example.com\nREV:2008-04-24T19:52:43Z\n' +
-    //   //   'END:VCARD',
-    //   text: 'BEGIN:VCALENDAR\nVERSION:2.0',
+    //   text: 'BEGIN:VCARD\nVERSION:3.0\n' +
+    //     'N:Gump;Forrest;;Mr.;\nFN:Forrest Gump\nORG:Bubba Gump Shrimp Co.\nTITLE:Shrimp Man\n' +
+    //     'PHOTO;VALUE=URI;TYPE=GIF:http://www.example.com/dir_photos/my_photo.gif\n' +
+    //     'TEL;TYPE=WORK,VOICE:(111) 555-1212\nTEL;TYPE=HOME,VOICE:(404) 555-1212\n' +
+    //     'ADR;TYPE=WORK,PREF:;;100 Waters Edge;Baytown;LA;30314;United States of America\n' +
+    //     'LABEL;TYPE=WORK,PREF:100 Waters Edge Baytown, LA 30314;United States of America\n' +
+    //     'ADR;TYPE=HOME:;;42 Plantation St.;Baytown;LA;30314;United States of America\n' +
+    //     'LABEL;TYPE=HOME:42 Plantation St.Baytown, LA 30314;United States of America\n' +
+    //     'EMAIL:forrestgump@example.com\nREV:2008-04-24T19:52:43Z\n' +
+    //     'URL:http://www.johndoe.com\n' +
+    //     'END:VCARD',
+    //   // text: 'BEGIN:VCALENDAR\nVERSION:2.0',
     //   // text: 'END:VTIMEZONE',
     //   format: 'QR_CODE'
     // }).present();

@@ -29,6 +29,7 @@ page-result {
     flex: 1;
     flex-flow: row nowrap;
     font-size: 20px;
+    min-height: 100px;
 
     & .icon {
       margin: 0 .5em 0 0;

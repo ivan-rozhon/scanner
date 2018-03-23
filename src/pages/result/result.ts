@@ -212,7 +212,9 @@ export class ResultPage {
       // check other available formats
       !this.isSms(text) && !this.isTel(text) &&
       // true URI only if it is QR code
-      this.format === 'QR_CODE';
+      this.format === 'QR_CODE' &&
+      // and result is not email
+      !this.isMail(text);
   }
 
   /**
@@ -338,6 +340,29 @@ export class ResultPage {
   isSearch(text: string): boolean {
     return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) &&
       !this.isGeo(text) && !this.isWifi(text) && !this.isContact(text) && !this.isCalendar(text);
+  }
+
+  /**
+   * return arr of specific contact property (as a string)
+   * @param data string representing contact object
+   * @param property property name
+   */
+  getContactProp(data: string, property: string): string {
+    // convert data string to Contact object
+    const contact: Contact = this.parseProvider.parseContact(data);
+    // initial prop key
+    let propArr = []
+
+    // get the property if exists
+    if (contact[property]) {
+      // split multiple property (separated by '|') to arr, and trim strings
+      propArr = contact[property]
+        .split('|')
+        .map(o => o.trim())
+    }
+
+    // just first item
+    return propArr.length ? propArr.shift() : null;
   }
 
   /** dismiss (close) modal window */

@@ -80,6 +80,29 @@
       Add
     </button>
 
+    <!-- Actions with contact - call, send,... -->
+    <ng-container *ngIf="isContact(text)">
+
+      <!-- Call -->
+      <button *ngIf="getContactProp(text, 'tel')" ion-button full icon-start (click)="call('tel:' + getContactProp(text, 'tel'))">
+        <ion-icon name="call"></ion-icon>
+        Call
+      </button>
+
+      <!-- Send E-mail -->
+      <button *ngIf="getContactProp(text, 'email')" ion-button full icon-start (click)="sendMail('mailto:' + getContactProp(text, 'email'))">
+        <ion-icon name="mail"></ion-icon>
+        Mail
+      </button>
+
+      <!-- Open URL in browser -->
+      <button *ngIf="getContactProp(text, 'url')" ion-button full icon-start (click)="openLink(getContactProp(text, 'url'))">
+        <ion-icon name="globe"></ion-icon>
+        Open
+      </button>
+
+    </ng-container>
+
     <!-- Add event, todo, alarm, etc. -->
     <button *ngIf="isCalendar(text)" ion-button full icon-start disabled>
       <ion-icon name="bookmark"></ion-icon>

@@ -38,7 +38,9 @@ export class ParseProvider {
     switch (identifier) {
       case 'mailto':
         mail = [
-          this.getStringAfter(`mailto:${data}`, 'mailto:', '?'),
+          !this.getStringAfter(`mailto:${data}`, 'mailto:', '?').length && data.length
+            ? data
+            : this.getStringAfter(`mailto:${data}`, 'mailto:', '?'),
           this.getStringAfter(data, 'subject=', '&'),
           this.getStringAfter(data, 'body=')
         ];
@@ -162,6 +164,7 @@ export class ParseProvider {
           tel: this.parseData(card, 'tel'),
           address: this.parseData(card, 'adr'),
           email: this.parseData(card, 'email'),
+          url: this.parseData(card, 'url')
         });
 
         break;
