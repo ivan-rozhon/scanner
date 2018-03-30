@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams, ToastController } from 'ionic-angular';
+import { ViewController, NavParams, ToastController, Platform } from 'ionic-angular';
 
 // native
 import { Clipboard } from '@ionic-native/clipboard';
@@ -14,11 +14,12 @@ import { ParseProvider, Contact } from './../../providers/parse/parse';
 
 @Component({
   selector: 'page-result',
-  templateUrl: 'result.html',
+  templateUrl: 'result.html'
 })
 export class ResultPage {
   text: string;
   format: string;
+  backAction: Function;
 
   constructor(
     public viewCtrl: ViewController,
@@ -29,11 +30,21 @@ export class ResultPage {
     private sms: SMS,
     private emailComposer: EmailComposer,
     private launchNavigator: LaunchNavigator,
-    private parseProvider: ParseProvider
+    private parseProvider: ParseProvider,
+    public platform: Platform
   ) {
     // assign result params
     this.text = this.params.get('text');
     this.format = this.params.get('format');
+
+    // when platform (android) is ready...
+    this.platform.ready().then(readySource => {
+      // register custom back button action
+      this.backAction = this.platform.registerBackButtonAction(() => {
+        // dismiss result page on back button
+        this.dismiss();
+      }, 2);
+    });
 
     // DEBUG
   }
@@ -51,40 +62,31 @@ export class ResultPage {
 
       // return number and text of SMS separated by pipe
       return `${splitted[1]} | ${smsText}`;
-    }
-
-    else if (this.isTel(result)) {
+    } else if (this.isTel(result)) {
       // return just all after identifier
       return [...splitted].slice(1).join(':');
-    }
-
-    else if (this.isMail(result)) {
+    } else if (this.isMail(result)) {
       // return only filled items
       return [...this.parseProvider.parseMail(result)].filter(o => o.length).join(' | ');
-    }
-
-    else if (this.isGeo(result)) {
+    } else if (this.isGeo(result)) {
       // get coordinations
-      const geoArr = [...splitted].slice(1).join(':').split(',');
+      const geoArr = [...splitted]
+        .slice(1)
+        .join(':')
+        .split(',');
 
       let geoText = '';
 
       // add each coordinate separated by pipe and space
       for (const i in geoArr) {
-        geoText = geoText.length
-          ? `${geoText} | ${geoArr[i]}`
-          : geoArr[i];
+        geoText = geoText.length ? `${geoText} | ${geoArr[i]}` : geoArr[i];
       }
 
       return geoText;
-    }
-
-    else if (this.isWifi(result)) {
+    } else if (this.isWifi(result)) {
       // return only filled items
       return [...this.parseProvider.parseWifi(result)].filter(o => o.length).join(' | ');
-    }
-
-    else if (this.isContact(result)) {
+    } else if (this.isContact(result)) {
       // contact object
       const contact: Contact = this.parseProvider.parseContact(result);
 
@@ -203,18 +205,21 @@ export class ResultPage {
    * @param text result text to check
    */
   isUri(text: string): boolean {
-    return (text.startsWith('http')
-      // if uri does not starts with 'http' protocol, add it
-      ? isWebUri(text)
-      : isWebUri(`http://${text}`)) &&
+    return (
+      (text.startsWith('http')
+        ? // if uri does not starts with 'http' protocol, add it
+          isWebUri(text)
+        : isWebUri(`http://${text}`)) &&
       // check also via regex
       this.isUriRegex(text) &&
       // check other available formats
-      !this.isSms(text) && !this.isTel(text) &&
+      !this.isSms(text) &&
+      !this.isTel(text) &&
       // true URI only if it is QR code
       this.format === 'QR_CODE' &&
       // and result is not email
-      !this.isMail(text);
+      !this.isMail(text)
+    );
   }
 
   /**
@@ -282,9 +287,11 @@ export class ResultPage {
     const lowerAndTrimmed = text.trim().toLowerCase();
 
     // check valid identificators 'BIZCARD:', 'BEGIN:VCARD' and 'MECARD:'
-    return this.qrCheck(text, 'BIZCARD:', 'MECARD:') ||
+    return (
+      this.qrCheck(text, 'BIZCARD:', 'MECARD:') ||
       // specific case is vcard - it must begin and ends with...
-      (lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard') && this.format === 'QR_CODE');
+      (lowerAndTrimmed.startsWith('begin:vcard') && lowerAndTrimmed.endsWith('end:vcard') && this.format === 'QR_CODE')
+    );
   }
 
   /**
@@ -301,9 +308,10 @@ export class ResultPage {
 
     // check all types - ends and begins
     typeArr.map(type => {
-      isCalendar = lowerText.includes(`BEGIN:${type}`.toLowerCase()) || lowerText.includes(`END:${type}`.toLowerCase())
-        ? true
-        : isCalendar;
+      isCalendar =
+        lowerText.includes(`BEGIN:${type}`.toLowerCase()) || lowerText.includes(`END:${type}`.toLowerCase())
+          ? true
+          : isCalendar;
     });
 
     // result must be also QR code
@@ -322,12 +330,12 @@ export class ResultPage {
     let isType = false;
 
     // check all input types (one must be true)
-    [...types,].map(type => {
+    [...types].map(type => {
       // compare lower cases of formats (results must begin with 'type')
       if (lowerText.startsWith(type.toLowerCase())) {
         isType = true;
       }
-    })
+    });
 
     // result must be also QR code
     return this.format === 'QR_CODE' && isType;
@@ -338,8 +346,16 @@ export class ResultPage {
    * @param text result text to check
    */
   isSearch(text: string): boolean {
-    return !this.isUri(text) && !this.isTel(text) && !this.isSms(text) && !this.isMail(text) &&
-      !this.isGeo(text) && !this.isWifi(text) && !this.isContact(text) && !this.isCalendar(text);
+    return (
+      !this.isUri(text) &&
+      !this.isTel(text) &&
+      !this.isSms(text) &&
+      !this.isMail(text) &&
+      !this.isGeo(text) &&
+      !this.isWifi(text) &&
+      !this.isContact(text) &&
+      !this.isCalendar(text)
+    );
   }
 
   /**
@@ -351,14 +367,12 @@ export class ResultPage {
     // convert data string to Contact object
     const contact: Contact = this.parseProvider.parseContact(data);
     // initial prop key
-    let propArr = []
+    let propArr = [];
 
     // get the property if exists
     if (contact[property]) {
       // split multiple property (separated by '|') to arr, and trim strings
-      propArr = contact[property]
-        .split('|')
-        .map(o => o.trim())
+      propArr = contact[property].split('|').map(o => o.trim());
     }
 
     // just first item
@@ -367,6 +381,10 @@ export class ResultPage {
 
   /** dismiss (close) modal window */
   dismiss(): void {
+    // unregister back action
+    this.backAction && this.backAction();
+
+    // close the result windo
     this.viewCtrl.dismiss();
   }
 }

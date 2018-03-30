@@ -1,4 +1,5 @@
 $dark-color: lighten(map-get($colors, 'dark'), 10%);
+$shadow-color: lighten(map-get($colors, 'dark'), 60%);
 
 page-home {
   .app-title > div {
@@ -16,6 +17,14 @@ page-home {
       flex-flow: column wrap;
       justify-content: center;
     }
+  }
 
+  .back-text {
+    bottom: 8px;
+    color: $shadow-color;
+    font-style: italic;
+    position: absolute;
+    text-align: center;
+    width: 100%;
   }
 }

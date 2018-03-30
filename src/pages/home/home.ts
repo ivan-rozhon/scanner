@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, PopoverController } from 'ionic-angular';
+import { AlertController, ModalController, PopoverController, Platform } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { ResultPage } from '../result/result';
@@ -10,14 +10,17 @@ import { StorageProvider } from './../../providers/storage/storage';
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage{
+export class HomePage {
+  backAction: Function;
+  showBackText: boolean;
 
   constructor(
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public barcodeScanner: BarcodeScanner,
-    public storageProvider: StorageProvider
+    public storageProvider: StorageProvider,
+    public platform: Platform
   ) {
     // DEBUG
     // this.modalCtrl.create(ResultPage, {
@@ -52,10 +55,28 @@ export class HomePage{
     //   // text: 'END:VTIMEZONE',
     //   format: 'QR_CODE'
     // }).present();
+
+    // when platform (android) is ready...
+    this.platform.ready().then(readySource => {
+      // register custom back button action
+      this.backAction = this.platform.registerBackButtonAction(() => {
+        // unregister back action and show back text
+        this.unregisterBackButtonAction(true);
+      }, 1);
+    });
   }
 
   /** activate camera to scan barcode and handle result */
   scan(): void {
+    // unregister back action
+    this.unregisterBackButtonAction();
+
+    // register back action again
+    this.backAction = this.platform.registerBackButtonAction(() => {
+      // unregister back action and show back text
+      this.unregisterBackButtonAction(true);
+    }, 1);
+
     this.barcodeScanner
       .scan({
         // settings
@@ -63,31 +84,58 @@ export class HomePage{
         showTorchButton: this.storageProvider.storageValues.showTorchButton,
         prompt: '',
         orientation: this.storageProvider.storageValues.fixedOrientation
-          // fix orientation if fixed orientation is enabled
-          ? this.storageProvider.storageValues.orientation
+          ? // fix orientation if fixed orientation is enabled
+            this.storageProvider.storageValues.orientation
           : 'none',
         torchOn: this.storageProvider.storageValues.torchOn,
         resultDisplayDuration: 0
       })
-      .then((barcodeData) => {
-        // do nothing if scanning is canceled
-        if (barcodeData.cancelled) { return; }
+      .then(
+        barcodeData => {
+          // do nothing if scanning is canceled
+          if (barcodeData && !barcodeData.cancelled) {
+            // unregister back action
+            this.unregisterBackButtonAction();
 
-        // Success! Barcode data is here... show result modal
-        const resultModal = this.modalCtrl.create(ResultPage, {
-          text: barcodeData.text,
-          format: barcodeData.format
-        });
+            // Success! Barcode data is here... show result modal
+            const resultModal = this.modalCtrl.create(ResultPage, {
+              text: barcodeData.text,
+              format: barcodeData.format
+            });
 
-        resultModal.present();
-      }, (err) => {
-        // An error occurred - show alert
-        this.alertCtrl.create({
-          title: 'Error',
-          message: err,
-          buttons: ['OK']
-        }).present();
-      });
+            resultModal.present();
+
+            resultModal.onDidDismiss(() => {
+              // unregister back action
+              this.unregisterBackButtonAction();
+              // re-register back action to close the app
+              this.backAction = this.platform.registerBackButtonAction(() => {
+                // unregister back action and show back text
+                this.unregisterBackButtonAction(true);
+              }, 1);
+            });
+          }
+        },
+        err => {
+          // An error occurred - show alert
+          this.alertCtrl
+            .create({
+              title: 'Error',
+              message: err,
+              buttons: ['OK']
+            })
+            .present();
+        }
+      );
+  }
+
+  /**
+   * unregister back button action (set native) and eventually show 'back' text
+   * @param showText show text?
+   */
+  unregisterBackButtonAction(showText?: boolean): void {
+    this.showBackText = showText ? showText : false;
+    this.backAction && this.backAction();
   }
 
   /** open setting popover */
